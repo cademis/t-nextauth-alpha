@@ -1,3 +1,7 @@
+# Instructions
+
+follow this guide https://www.youtube.com/watch?v=1MTyCvS05V4&list=PPSV
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
