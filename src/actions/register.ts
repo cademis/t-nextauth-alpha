@@ -2,7 +2,7 @@
 
 import { type RegisterFormSchema, registerFormSchema } from "~/schemas";
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { db } from "~/server/db";
 import { getUserByEmail } from "~/data/user";
 
