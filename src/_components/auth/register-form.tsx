@@ -93,7 +93,7 @@ export const RegisterForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit">
-            Login
+            Register
           </Button>
         </form>
       </Form>

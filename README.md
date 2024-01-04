@@ -2,6 +2,44 @@
 
 follow this guide https://www.youtube.com/watch?v=1MTyCvS05V4&list=PPSV
 
+# Notes
+
+This is some top quality content, Antonio!
+
+With regards to the user object at 2:56:32, it is undefined because it contains the result of the authorize callback within the authConfig, meaning that it will only ever have a value once during signIn, after which it is undefined.
+
+Since the value of the session is set during signIn, you can just use the user object instead of making a request to the database again in the jwt callback.
+
+Hope this helps, and thank you for awesome content!
+
+And regarding extending the user (3:11:02) and the token (3:13:48), this works:
+
+```
+import { User } from "@auth/core/types";
+import { JWT } from "@auth/core/jwt";
+
+
+declare module "@auth/core/types" {
+  interface User {
+    // add your custom fields here
+  }
+
+  interface Session {
+    user: User;
+  }
+}
+
+declare module "@auth/core/jwt" {
+  interface JWT {
+    // add your custom fields here
+  }
+}
+```
+
+The issue with your implementation of the token custom field is that you are making it optional by adding the '?', meaning it is either "ADMIN" | "USER" | undefined, which does not match what you have in the user.role field (it is not optional).
+
+So either make them both optional, or both required, and it should work.
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
