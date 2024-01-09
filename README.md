@@ -2,6 +2,8 @@
 
 follow this guide https://www.youtube.com/watch?v=1MTyCvS05V4&list=PPSV
 
+https://github.com/AntonioErdeljac/next-auth-v5-advanced-guide
+
 # Notes
 
 This is some top quality content, Antonio!

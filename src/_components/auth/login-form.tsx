@@ -36,15 +36,27 @@ export const LoginForm = () => {
     },
   });
 
-  const onSubmit = (data: LoginFormSchema) => {
+  const onSubmit = (values: LoginFormSchema) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      void login(data).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
-      });
+      login(values)
+        .then((data) => {
+          if (data?.error) {
+            form.reset();
+            setError(data?.error);
+            return;
+          }
+
+          if (data?.success) {
+            form.reset();
+            setSuccess(data?.success);
+          }
+        })
+        .catch(() => {
+          setError("Something went wrong");
+        });
     });
   };
 

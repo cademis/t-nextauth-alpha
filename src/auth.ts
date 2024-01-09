@@ -1,17 +1,9 @@
-import NextAuth, { type User } from "next-auth";
+import NextAuth from "next-auth";
 import authConfig from "~/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "~/server/db";
 import { getUserById } from "~/data/user";
 import type { UserRole } from "@prisma/client";
-
-declare module "next-auth" {
-  interface Session {
-    user: {
-      role?: UserRole;
-    } & User;
-  }
-}
 
 export const {
   handlers: { GET, POST },

@@ -16,12 +16,14 @@ export const login = async (values: LoginFormSchema) => {
   }
 
   const { email, password } = validatedFields.data;
+
   try {
     await signIn("credentials", {
       email,
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
+    return { success: "Success" };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
