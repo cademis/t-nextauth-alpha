@@ -22,11 +22,18 @@ import { FormError } from "~/_components/form-error";
 import { FormSuccess } from "~/_components/form-success";
 import { login } from "~/actions/login";
 import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Please login with your email and password"
+      : "";
 
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -105,7 +112,7 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
-          <FormError message={error} />
+          <FormError message={error ?? urlError ?? null} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit">
             Login

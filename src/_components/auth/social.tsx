@@ -2,15 +2,27 @@
 
 import { GithubIcon } from "lucide-react";
 import { Button } from "~/_components/ui/button";
+import { signIn } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "~/routes";
+import { useSearchParams } from "next/navigation";
 
 export const Social = () => {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  const handleClick = async () => {
+    await signIn("github", {
+      callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+    });
+  };
+
   return (
     <div className="item-center gap-x-2s flex w-full">
       <Button
         size="lg"
         variant="outline"
         className="w-full"
-        onClick={() => console.log("TODO: Implement Social Login with Github")}
+        onClick={handleClick}
       >
         <GithubIcon />
       </Button>
