@@ -5,6 +5,7 @@ import { type RegisterFormSchema, registerFormSchema } from "~/schemas";
 import bcrypt from "bcryptjs";
 import { db } from "~/server/db";
 import { getUserByEmail } from "~/data/user";
+import { generateVerificationToken } from "~/lib/tokens";
 
 export const register = async (values: RegisterFormSchema) => {
   const validatedSchema = registerFormSchema.safeParse(values);
@@ -29,11 +30,13 @@ export const register = async (values: RegisterFormSchema) => {
       },
     });
 
+    const verificationToken = await generateVerificationToken(email);
+
     //TODO: Send verification token email
 
     return {
       success:
-        "You're all set! While we review your details, feel free to explore our demo projects. We'll be in touch soon!",
+        "Confirmation email sent! Feel free to browse the demo projects while your account is being verified.",
     };
   }
 };

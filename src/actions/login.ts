@@ -2,6 +2,8 @@
 
 import { AuthError } from "next-auth";
 import { signIn } from "~/auth";
+import { getUserByEmail } from "~/data/user";
+import { generateVerificationToken } from "~/lib/tokens";
 import { DEFAULT_LOGIN_REDIRECT } from "~/routes";
 import {
   loginFormSchema,
@@ -16,6 +18,20 @@ export const login = async (values: LoginFormSchema) => {
   }
 
   const { email, password } = validatedFields.data;
+
+  const existingUser = await getUserByEmail(email);
+
+  if (!existingUser?.email || !existingUser?.password) {
+    return { error: "Email does not exist" };
+  }
+
+  if (!existingUser?.emailVerified) {
+    const verificationToken = await generateVerificationToken(
+      existingUser.email,
+    );
+    console.log({ verificationToken });
+    return { success: "Confirmation Email Sent" };
+  }
 
   try {
     await signIn("credentials", {

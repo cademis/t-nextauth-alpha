@@ -30,9 +30,12 @@ export const LoginForm = () => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
+  if (searchParams.get("error") === "OAuthAccountNotLinked")
+    console.log("Error caught: ", searchParams.get("error"));
+
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Please login with your email and password"
+      ? "Email already in use with a different provider. Please login with another provider."
       : "";
 
   const form = useForm<LoginFormSchema>({
@@ -112,7 +115,7 @@ export const LoginForm = () => {
               </FormItem>
             )}
           />
-          <FormError message={error ?? urlError ?? null} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit">
             Login
