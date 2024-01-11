@@ -4,6 +4,12 @@ follow this guide https://www.youtube.com/watch?v=1MTyCvS05V4&list=PPSV
 
 https://github.com/AntonioErdeljac/next-auth-v5-advanced-guide
 
+resend website currently not working
+
+Continue from here after checking
+
+https://youtu.be/1MTyCvS05V4?si=XdmVLa6bt8QjVa5D&t=14921
+
 # Notes
 
 This is some top quality content, Antonio!
