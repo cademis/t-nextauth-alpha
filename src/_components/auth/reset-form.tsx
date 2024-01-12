@@ -17,40 +17,55 @@ import { Button } from "~/_components/ui/button";
 import { FormError } from "~/_components/form-error";
 import { FormSuccess } from "~/_components/form-success";
 import { useState, useTransition } from "react";
-import { type RegisterFormSchema, registerFormSchema } from "~/schemas";
-import { register } from "~/actions/register";
+import {
+  resetFormSchema,
+  type ResetFormSchema,
+} from "~/schemas/reset-form.schema";
+import { reset } from "~/actions/reset";
 
-export const RegisterForm = () => {
+export const ResetForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<RegisterFormSchema>({
-    resolver: zodResolver(registerFormSchema),
+  const form = useForm<ResetFormSchema>({
+    resolver: zodResolver(resetFormSchema),
     defaultValues: {
       email: "example@email.com",
-      password: "pass1234",
     },
   });
 
-  const onSubmit = (data: RegisterFormSchema) => {
+  const onSubmit = (values: ResetFormSchema) => {
     setError("");
     setSuccess("");
 
+    console.log(values);
+
     startTransition(() => {
-      void register(data).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
-      });
+      reset(values)
+        .then((data) => {
+          if (data?.error) {
+            form.reset();
+            setError(data.error);
+            return;
+          }
+
+          if (data?.success) {
+            form.reset();
+            setSuccess(data?.success);
+          }
+        })
+        .catch(() => {
+          setError("Something went wrong");
+        });
     });
   };
 
   return (
     <CardWrapper
-      headerLabel="Create an account"
-      backButtonLabel="Already have an account? Login here."
+      headerLabel="Forgot your password? "
+      backButtonLabel="Back to login"
       backButtonHref="/auth/login"
-      showSocial
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -72,30 +87,11 @@ export const RegisterForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="password"
-                    placeholder="password"
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
+          <FormError message={error} />
           <FormSuccess message={success} />
-
-          {!success && <FormError message={error} />}
           <Button disabled={isPending} type="submit">
-            Register
+            Send Reset Email
           </Button>
         </form>
       </Form>

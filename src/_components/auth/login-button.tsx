@@ -14,14 +14,14 @@ export const LoginButton = ({
   asChild,
 }: LoginButtonProps) => {
   const router = useRouter();
-  const onCLick = () => router.push("/auth/login");
+  const handleClick = () => router.push("/auth/login");
 
   if (mode === "modal") {
     return <span>TODO: Implement modal</span>;
   }
 
   return (
-    <span className="cursor-pointer" onClick={onCLick}>
+    <span className="cursor-pointer" onClick={handleClick}>
       {children}
     </span>
   );
