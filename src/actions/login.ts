@@ -3,7 +3,11 @@
 import { AuthError } from "next-auth";
 import { signIn } from "~/auth";
 import { getUserByEmail } from "~/data/user";
-import { generateVerificationToken } from "~/lib/tokens";
+import { sendTwoFactorTokenEmail } from "~/lib/mail";
+import {
+  generateVerificationToken,
+  generateTwoFactorToken,
+} from "~/lib/tokens";
 import { DEFAULT_LOGIN_REDIRECT } from "~/routes";
 import {
   loginFormSchema,
@@ -17,7 +21,7 @@ export const login = async (values: LoginFormSchema) => {
     return { error: "Invalid Fields" };
   }
 
-  const { email, password } = validatedFields.data;
+  const { email, password, code } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
 
@@ -31,6 +35,17 @@ export const login = async (values: LoginFormSchema) => {
     );
     console.log({ verificationToken });
     return { success: "Confirmation Email Sent" };
+  }
+
+  if (existingUser.isTwoFactorEnabled && existingUser.email) {
+    if (code) {
+      //TODO: Verify code
+    } else {
+      const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+
+      await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
+      return { twoFactor: true };
+    }
   }
 
   try {
